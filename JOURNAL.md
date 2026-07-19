@@ -23,7 +23,7 @@ Currently, the codebase lacks the necessary database tables, models, API endpoin
 - [ ] Integrate webhook dispatching into the review lifecycle in `core/services/review_service.py` for both successful completions and processing failures.
 - [ ] Implement unit tests in `tests/unit/test_webhooks.py` to verify models, services, schemas, and endpoint responses.
 
-**Branch name:** feature/87-webhook-system-notifier
+**Branch name:** feat/87-webhook-system-notifier
 
 **Setup confirmation:** [x] App runs locally at localhost:5173
 
