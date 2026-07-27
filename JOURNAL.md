@@ -28,3 +28,20 @@ Currently, the codebase lacks the necessary database tables, models, API endpoin
 **Setup confirmation:** [x] App runs locally at localhost:5173
 
 **Cohort ledger:** [x] Issue added to cohort ledger
+
+
+
+
+## Week 8 — Reproduction & solution planning
+
+**Reproduction commit link:** [link to commit documenting the reproduced issue]
+
+**Reproduction summary:**
+I reproduced the issue locally by running `poetry run pytest tests/unit/test_webhooks.py -v`. The test suite failed with `pydantic_core.ValidationError` due to a data type mismatch between the comma-separated string stored in the database (`events: str`) and the list expected by API schemas (`events: list[str]`), alongside `pytest` failing to execute `async def` test functions due to missing asyncio configuration in `pyproject.toml`.
+
+**PLAN.md link:** [Plan.md](Plan.md)
+
+**Walkthrough video (recommended):** [link to your Loom video, ≤2 min — recommended, not graded]
+
+**Blockers or open questions:**
+None.
