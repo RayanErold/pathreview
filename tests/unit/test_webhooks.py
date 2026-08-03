@@ -132,15 +132,27 @@ class TestWebhookSchemas:
         """Test WebhookCreate schema."""
         data = {
             "url": "https://example.com/webhook",
-            "events": "review.completed",
+            "events": ["review.completed", "review.failed"],
             "secret": "test_secret",
             "description": "Test webhook",
         }
 
         schema = WebhookCreate(**data)
-        assert schema.url == "https://example.com/webhook"
-        assert schema.events == "review.completed"
+        assert str(schema.url) == "https://example.com/webhook"
+        assert schema.events == ["review.completed", "review.failed"]
         assert schema.secret == "test_secret"
+
+    def test_webhook_create_schema_accepts_string_events(self):
+        """Test WebhookCreate accepts comma-separated event strings."""
+        data = {
+            "url": "https://example.com/webhook",
+            "events": "review.completed,review.failed",
+            "secret": "test_secret",
+            "description": "Test webhook",
+        }
+
+        schema = WebhookCreate(**data)
+        assert schema.events == ["review.completed", "review.failed"]
 
     def test_webhook_response_schema(self):
         """Test WebhookResponse schema."""
@@ -159,7 +171,7 @@ class TestWebhookSchemas:
         }
 
         schema = WebhookResponse(**webhook_data)
-        assert schema.url == "https://example.com/webhook"
+        assert str(schema.url) == "https://example.com/webhook"
         assert schema.is_active is True
         assert schema.failure_count == 0
 

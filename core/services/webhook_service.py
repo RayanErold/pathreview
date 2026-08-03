@@ -18,11 +18,27 @@ from api.schemas.review import ReviewResponse
 log = structlog.get_logger()
 
 
+def _normalize_events(events: str | list[str] | None) -> str:
+    if events is None:
+        return ""
+    if isinstance(events, str):
+        normalized = ",".join(
+            event.strip() for event in events.split(",") if event.strip()
+        )
+        return normalized or ""
+    if isinstance(events, list):
+        normalized = ",".join(
+            event.strip() for item in events for event in str(item).split(",") if event.strip()
+        )
+        return normalized or ""
+    raise TypeError("events must be a string or list of strings")
+
+
 async def create_webhook(
     db,
     user_id: UUID,
     url: str,
-    events: str = "review.completed",
+    events: str | list[str] = "review.completed",
     secret: Optional[str] = None,
     description: Optional[str] = None,
 ) -> Webhook:
@@ -43,7 +59,7 @@ async def create_webhook(
     webhook = Webhook(
         user_id=user_id,
         url=url,
-        events=events,
+        events=_normalize_events(events),
         secret=secret,
         description=description,
         is_active=True,
@@ -130,7 +146,7 @@ async def update_webhook(
     webhook_id: UUID,
     user_id: UUID,
     url: Optional[str] = None,
-    events: Optional[str] = None,
+    events: Optional[str | list[str]] = None,
     secret: Optional[str] = None,
     description: Optional[str] = None,
     is_active: Optional[bool] = None,
@@ -158,7 +174,7 @@ async def update_webhook(
     if url is not None:
         webhook.url = url
     if events is not None:
-        webhook.events = events
+        webhook.events = _normalize_events(events)
     if secret is not None:
         webhook.secret = secret
     if description is not None:

@@ -57,6 +57,13 @@ class Webhook(Base):
         Index("ix_webhooks_is_active", "is_active"),
     )
 
+    def __init__(self, **kwargs):
+        if "is_active" not in kwargs:
+            kwargs["is_active"] = True
+        if "failure_count" not in kwargs:
+            kwargs["failure_count"] = 0
+        super().__init__(**kwargs)
+
     def __repr__(self) -> str:
         return f"<Webhook(id={self.id}, user_id={self.user_id}, url={self.url})>"
 

@@ -2,7 +2,7 @@
 
 **Issue link:** [GitHub Issue #87](https://github.com/ascherj/pathreview/issues/87)
 
-**Issue title:** Implement a webhook system that notifies users when their review is ready
+**Issue title:** Implement a webhook system that notifies users when their review is ready.
 
 **Tier:** [x] Tier 3
 
@@ -45,3 +45,33 @@ I reproduced the issue locally by running `poetry run pytest tests/unit/test_web
 
 **Blockers or open questions:**
 None.
+
+
+## Week 9 — Fix implementation and validation
+
+**Date:** 2026-08-02
+
+**PR link:**
+
+**Branch:**https://github.com/RayanErold/pathreview/tree/feat/87-webhook-system-notifier
+
+**What you built:**
+[1–3 sentences summarizing what your fix does and how it works]
+
+**What I changed today:**
+- Fixed webhook schema handling so `events` can be provided as either a comma-separated string or a list of strings in `api/schemas/webhook.py`.
+- Added normalization logic in `core/services/webhook_service.py` to store webhook events consistently as a comma-separated string.
+- Corrected `core/models/webhook.py` so a newly created `Webhook` defaults `is_active=True` and `failure_count=0` even when created directly in tests or via service constructors.
+- Updated `tests/unit/test_webhooks.py` to assert `HttpUrl` fields using `str(schema.url)` and to validate webhook schema and model behavior.
+- Verified the focused webhook test file passes with `py -3 -m pytest -q tests/unit/test_webhooks.py`.
+
+**Tests added or updated:**
+- `tests/unit/test_webhooks.py`
+
+**Branch / PR notes:**
+- Work is on the webhook feature branch and the focused unit tests now pass.
+- [ ] Entry 1
+- [ ] Entry 2
+
+**Blockers or open questions:**
+- None at this time.
