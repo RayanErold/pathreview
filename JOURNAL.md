@@ -75,3 +75,35 @@ None.
 
 **Blockers or open questions:**
 - None at this time.
+
+
+
+
+
+## Week 10 — Iteration & reflection
+
+### Reviewer feedback
+
+**Feedback received:** No
+
+**Summary of feedback:** I didn't receive any review so far
+
+**How you responded:** N/A
+---
+
+### Reflection
+
+**What was harder than you expected?**
+Resolving the structural mismatch between the database layer and the API validation schemas was much harder than expected. Specifically, storing webhook event subscriptions as a comma-separated string (`events: str`) in SQLAlchemy while requiring API schemas to consume and expose a list of strings (`events: list[str]`) led to subtle `ValidationError` crashes when instantiating Pydantic schemas from ORM models. Additionally, integrating async event triggers into `review_service.py` without causing unhandled coroutine warnings in Pytest required carefully navigating `pytest-asyncio` configuration (`asyncio_mode = "auto"` in `pyproject.toml`).
+
+**What did you learn about working in a large codebase?**
+The difference is that you have to know what you want to improve/ add on the existing codebase. The differnce is that contributing to someone else's production code is much harder as compared building your own projecT. I belive so because it is not ease to navigate an unfamiliar codebase, because you have to know the functions of some of the existing files which can take some time as compared to your own project where you already know the entire codebase and how the existing files are dependant from one another. But navigating this codebase help me learn a lot. It helps me better understand how to approach an unfamiliar codebase and how to ask the right question before starting any work. Helped me develop better debugging skills and also helped me understood that bugs are always there or will always pop up and it is important to have an understang of the root causes and that can help know where to look which helps to prevents more bugs from happening.  
+
+**How did AI tools help — and where did they fall short?**
+AI assistance was extremely useful for rapidly bootstrapping boilerplate infrastructure—such as drafting Alembic database migrations, setting up initial Pydantic schemas, generating REST CRUD routes, implementing HMAC-SHA256 signature generation logic, and drafting clear documentation. However, AI fell short when dealing with dynamic runtime integrations and subtle type coercions between Pydantic v2 and SQLAlchemy. The AI initially assumed clean type alignment, but I had to go beyond AI assistance to manually inspect tracebacks, trace root causes, implement `@field_validator` hooks for list/string normalizations in `webhook_service.py`, and properly configure async test execution.
+
+**What would you do differently if you started over?**
+If I started over, I would spend more time up front agreeing on exact data contracts and serialization strategies between the database storage model and the Pydantic API schemas before writing service logic. Rather than discovering data type mismatches late in unit testing, I would explicitly plan whether to store events as JSON/ARRAY types or specify string-to-list transformers in the initial design. I would also configure the test environment (`pytest-asyncio` settings) right at the beginning of implementation to catch async coroutine issues immediately.
+
+**What are you most proud of from this module?**
+I am most proud of successfully designing and shipping a complete, end-to-end Tier 3 async feature—building everything from database migrations and security HMAC signing to asynchronous review lifecycle triggers and robust Pydantic schemas—and systematically debugging complex validation edge cases until the entire test suite passed with 100% green status.
